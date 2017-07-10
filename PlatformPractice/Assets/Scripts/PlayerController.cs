@@ -9,17 +9,29 @@ public class PlayerController : MonoBehaviour
     public float JumpForce = 10f;
     public Rigidbody RB;
     public float DistanceFromGround = 2.5f;
-    public Input[] controllers;
+
     [HideInInspector]
     public bool grounded = true;
-    // Use this for initialization
-    void Awake()
+
+    void Start()
     {
+       
+    }
+    // Update is called once per frame
+    #region[Movment]
+    void Update()
+    {
+        checkJumpState();
     }
 
-    // Update is called once per frame
+    void FixedUpdate()
+    {
+        checkInputs();
+       
+        
+    }
 
-    void Update()
+    private void checkJumpState()
     {
         RaycastHit hit;
         Ray landingRay = new Ray(transform.position, Vector3.down);
@@ -33,9 +45,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    private void checkInputs()
     {
-
         if (Input.GetKey(KeyCode.D))
         {
             MoveHorizontal(PlayerSpeed * Time.deltaTime);
@@ -59,8 +70,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-
     private void MoveHorizontal(float axis)
     {
         transform.Translate(axis, 0f, 0f);
@@ -70,4 +79,10 @@ public class PlayerController : MonoBehaviour
     {
         transform.Translate(0f, 0f, axis);
     }
+
+#endregion
+
+
+   
+
 }
