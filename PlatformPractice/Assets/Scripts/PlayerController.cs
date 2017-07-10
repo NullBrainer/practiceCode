@@ -9,21 +9,29 @@ public class PlayerController : MonoBehaviour
     public float JumpForce = 10f;
     public Rigidbody RB;
     public float DistanceFromGround = 2.5f;
-
+    private Camera playerCam;
     [HideInInspector]
     public bool grounded = true;
 
+    public int mouseSensitivity;
+    private float HorizonalAxis;
+    private float VerticalAxis;
+
     void Start()
     {
-       
+        Cursor.lockState = CursorLockMode.Locked;
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+        playerCam = GetComponentInChildren<Camera>();
     }
     // Update is called once per frame
-    #region[Movment]
+   
     void Update()
     {
         checkJumpState();
+        changeCameraRotation();
     }
 
+ #region[Movment]
     void FixedUpdate()
     {
         checkInputs();
@@ -80,9 +88,20 @@ public class PlayerController : MonoBehaviour
         transform.Translate(0f, 0f, axis);
     }
 
-#endregion
+    #endregion
 
 
-   
+    private void changeCameraRotation()
+    {
+        HorizonalAxis = Input.GetAxisRaw("Mouse X");
+        VerticalAxis = Input.GetAxisRaw("Mouse Y") * -1;//to prevent inverted movement
+        Vector3 camRotation = playerCam.transform.localEulerAngles;
+        Vector3 horizontalRotation = transform.localEulerAngles;
+        camRotation.x += VerticalAxis * mouseSensitivity;
+        horizontalRotation.y += HorizonalAxis * mouseSensitivity;
+
+        transform.localEulerAngles = horizontalRotation;
+        playerCam.transform.localEulerAngles = camRotation;
+    }
 
 }
